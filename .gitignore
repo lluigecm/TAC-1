@@ -1,0 +1,15 @@
+# Dados brutos (arquivo grande, acima do limite de 100MB do GitHub — ver README)
+survey_results_public.csv
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# SO
+.DS_Store
+Thumbs.db
