@@ -1,0 +1,146 @@
+DESCRIÇÃO DA BASE DE DADOS E HIPÓTESES INICIAIS
+Trabalho de Análise Exploratória de Dados
+
+===================================================================
+1. DESCRIÇÃO GERAL DA BASE DE DADOS
+===================================================================
+
+A base utilizada é a Stack Overflow Developer Survey, na edição que inclui um
+módulo específico sobre IA e AI Agents. É uma pesquisa anual aplicada pela
+Stack Overflow com desenvolvedores de software ao redor do mundo, cobrindo
+perfil demográfico e profissional, tecnologias utilizadas, remuneração,
+satisfação no trabalho e, nesta edição, a percepção e adoção de
+ferramentas/agentes de IA no processo de desenvolvimento.
+
+A base é composta por dois arquivos:
+
+  - survey_results_public.csv: as respostas individuais da pesquisa
+    (uma linha por respondente). Base original com 49.191 linhas e 172 colunas.
+
+  - survey_results_schema.csv: dicionário oficial das perguntas (nome da
+    coluna, texto completo da pergunta e, quando aplicável, o texto de cada
+    sub-item), usado para entender o significado de cada coluna antes de
+    selecioná-las.
+
+É uma pesquisa opcional e paginada: o respondente pode pular perguntas ou
+parar antes do fim. Por isso boa parte das colunas tem valores faltantes
+gravados como a string literal "NA", e a taxa de preenchimento cai conforme
+a pergunta aparece mais tarde no formulário.
+
+Recorte aplicado:
+  - Linhas: mantivemos apenas respondentes com
+    MainBranch == "I am a developer by profession" (37.467 de 49.191
+    respostas, ~76% da base), removendo estudantes, hobbistas e
+    ex-desenvolvedores, cujas respostas distorcem perguntas de carreira,
+    mercado de trabalho e remuneração.
+  - Colunas: das 172 colunas originais, selecionamos 20 (+ ResponseId como
+    identificador). A maior parte das colunas descartadas é de perguntas de
+    múltipla escolha ("selecione todas que se aplicam") ou de rankings
+    compostos, com valores separados por ";", exigindo parsing próprio
+    (explosão de listas) fora do escopo desta primeira etapa exploratória.
+    Priorizamos colunas de resposta única, formando um eixo temático
+    coerente: perfil profissional, remuneração/satisfação e
+    adoção/percepção de IA.
+
+Base final de trabalho: 37.467 linhas x 20 colunas (+ ResponseId).
+
+===================================================================
+2. DESCRIÇÃO DAS COLUNAS SELECIONADAS
+===================================================================
+
+Perfil profissional:
+  - Age            Faixa etária                                    (categórica ordinal)
+  - EdLevel        Nível de formação mais alto concluído           (categórica ordinal)
+  - Employment     Situação de emprego atual                       (categórica nominal)
+  - WorkExp        Anos de experiência profissional em programação (contínua numérica)
+  - YearsCode      Anos totais programando (incluindo estudo)      (contínua numérica)
+  - DevType        Cargo/função atual                              (categórica nominal)
+  - OrgSize        Tamanho da empresa (nº de funcionários)         (categórica ordinal)
+  - ICorPM         Contribuidor individual ou gestor de pessoas    (categórica nominal)
+  - RemoteWork     Modelo de trabalho (remoto/híbrido/presencial)  (categórica nominal)
+  - Country        País de residência                              (categórica nominal, alta cardinalidade)
+  - Industry       Setor/indústria em que atua                     (categórica nominal)
+
+Remuneração e satisfação:
+  - JobSat              Satisfação com o cargo atual (escala 1-10)   (contínua/ordinal discreta)
+  - ConvertedCompYearly Remuneração anual total, convertida p/ USD   (contínua numérica)
+
+Adoção e percepção de IA:
+  - AIThreat    Percepção de a IA ameaçar o próprio emprego            (categórica nominal)
+  - AISelect    Uso de ferramentas de IA no desenvolvimento            (categórica nominal)
+  - AISent      Sentimento em relação ao uso de IA no trabalho         (categórica ordinal)
+  - AIAcc       Confiança na precisão das saídas de IA                 (categórica ordinal)
+  - AIComplex   Percepção de quão bem a IA lida com tarefas complexas  (categórica ordinal)
+  - AIAgents    Uso de agentes de IA no trabalho                       (categórica nominal)
+
+Engajamento com a comunidade:
+  - SOVisitFreq Frequência de visita ao Stack Overflow (categórica ordinal)
+
+Resumo de tipos: 4 variáveis contínuas (WorkExp, YearsCode, JobSat,
+ConvertedCompYearly) e 16 categóricas (a maioria nominal; Age, EdLevel,
+OrgSize, AISent, AIAcc, AIComplex e SOVisitFreq são ordinais).
+
+===================================================================
+3. EXISTÊNCIA DE RÓTULO (LABEL)
+===================================================================
+
+A base NÃO possui um rótulo/target pré-definido pelo dataset original — a
+Stack Overflow Developer Survey é uma pesquisa observacional, não um
+problema de classificação/regressão supervisionado nativamente. Nesta etapa
+o trabalho é exploratório (EDA), sem variável-alvo fixada.
+
+Ainda assim, para as próximas etapas do trabalho, as variáveis mais
+prováveis de assumir o papel de rótulo (dependendo da pergunta de pesquisa
+escolhida) são:
+
+  - AIAgents (uso de agentes de IA no trabalho) ou AISelect (uso de
+    ferramentas de IA) — como alvo categórico, para entender o que
+    caracteriza quem adota IA/agentes de IA.
+  - AISent (sentimento em relação à IA) — como alvo ordinal, para entender
+    o que influencia uma percepção mais positiva/negativa sobre IA.
+  - ConvertedCompYearly (remuneração) ou JobSat (satisfação) — como alvo
+    contínuo, para entender fatores associados a maior remuneração ou
+    satisfação no trabalho.
+
+A definição final do rótulo será feita na próxima etapa, a partir das
+hipóteses abaixo.
+
+===================================================================
+4. HIPÓTESES INICIAIS
+===================================================================
+
+H1. Desenvolvedores com mais experiência (WorkExp/YearsCode maiores) têm
+    percepção menos ameaçadora da IA (AIThreat) e sentimento mais neutro/
+    cético em relação a ela (AISent), comparado a desenvolvedores juniores.
+
+H2. O uso de agentes de IA (AIAgents) e de ferramentas de IA (AISelect) está
+    associado ao cargo/função (DevType) e ao tamanho da empresa (OrgSize) —
+    esperamos maior adoção em funções mais técnicas/seniores e em empresas
+    maiores, com processos mais estruturados de adoção de novas ferramentas.
+
+H3. Quem confia mais na precisão das saídas de IA (AIAcc) e percebe melhor
+    desempenho da IA em tarefas complexas (AIComplex) tende a reportar
+    sentimento mais positivo em relação à IA (AISent) e menor percepção de
+    ameaça ao próprio emprego (AIThreat).
+
+H4. A remuneração (ConvertedCompYearly) está associada positivamente à
+    experiência (WorkExp/YearsCode) e ao nível de formação (EdLevel), e
+    varia bastante por país (Country) e por modelo de trabalho (RemoteWork).
+
+H5. A satisfação no trabalho (JobSat) está mais relacionada ao papel
+    (ICorPM — contribuidor individual vs. gestor) e ao modelo de trabalho
+    (RemoteWork) do que à remuneração isoladamente.
+
+H6. Desenvolvedores que visitam o Stack Overflow com mais frequência
+    (SOVisitFreq) tendem a ser os mais júnior (menor WorkExp/YearsCode),
+    usando a comunidade como apoio de aprendizado.
+
+Essas hipóteses são o ponto de partida e podem ser ajustadas conforme a
+análise avança nas próximas etapas do trabalho.
+
+===================================================================
+Observação: a análise exploratória completa (tipagem de variáveis, nulos,
+estatísticas descritivas, histogramas, boxplots, outliers, teste de
+normalidade e gráficos de barras para as variáveis categóricas) está no
+notebook eda_stackoverflow_survey.ipynb, não anexado a este documento
+conforme solicitado.
