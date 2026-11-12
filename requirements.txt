@@ -2,6 +2,9 @@ pandas
 numpy
 matplotlib
 scipy
+seaborn
+statsmodels
+scikit-learn>=1.4
 jupyter
 ipykernel
 nbformat

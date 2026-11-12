@@ -6,7 +6,14 @@ e adoção/percepção de IA entre desenvolvedores.
 
 ## Estrutura
 
-- [`eda_stackoverflow_survey.ipynb`](eda_stackoverflow_survey.ipynb) — notebook principal, já executado
+- [`eda_pipeline_fase0_7.ipynb`](eda_pipeline_fase0_7.ipynb) — **notebook atual (Entrega 1)**, já executado:
+  revisão da AED (Bloco A, Fases 0 a 5) + formulação do problema, baseline e particionamento sem
+  vazamento (Bloco B, Fases 6 e 7).
+- [`FICHA_DE_PROPOSTA.md`](FICHA_DE_PROPOSTA.md) — ficha de proposta do projeto (tarefa, alvo, métrica,
+  modelos e riscos).
+- [`eda_pipeline_fase0_5.ipynb`](eda_pipeline_fase0_5.ipynb) — versão anterior do pipeline (Fases 0 a 5),
+  mantida como histórico.
+- [`eda_stackoverflow_survey.ipynb`](eda_stackoverflow_survey.ipynb) — análise descritiva inicial
   (tipagem de variáveis, nulos, estatísticas descritivas, histogramas, boxplots, outliers, teste de
   normalidade e gráficos de barras para as variáveis categóricas).
 - [`survey_results_schema.csv`](survey_results_schema.csv) — dicionário oficial das perguntas da pesquisa.
@@ -36,5 +43,5 @@ GitHub. Para reproduzir a análise:
 python -m venv .venv
 .venv\Scripts\activate        # Windows
 pip install -r requirements.txt
-jupyter notebook eda_stackoverflow_survey.ipynb
+jupyter notebook eda_pipeline_fase0_7.ipynb
 ```
