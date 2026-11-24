@@ -13,3 +13,7 @@ venv/
 # SO
 .DS_Store
 Thumbs.db
+
+# Configuração local de editor e do Claude Code (não faz parte do projeto)
+.claude/
+.vscode/

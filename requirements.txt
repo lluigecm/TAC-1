@@ -4,7 +4,8 @@ matplotlib
 scipy
 seaborn
 statsmodels
-scikit-learn>=1.4
+scikit-learn>=1.5
+catboost
 jupyter
 ipykernel
 nbformat
